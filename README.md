@@ -1,2 +1,2 @@
-# coding-spring-springboot-rest-api-with-swagger
-Coding a springboot rest api documented with swagger
+# coding-spring-springboot-rest-api-simple
+Coding a simple rest API using Springboot and H2 database
