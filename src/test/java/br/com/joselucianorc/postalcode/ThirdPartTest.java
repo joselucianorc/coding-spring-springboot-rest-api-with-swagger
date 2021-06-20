@@ -26,4 +26,5 @@ public class ThirdPartTest {
 		assertEquals(200, result.getStatusCodeValue());
 		assertTrue(result.getBody().contains("https://docs.thecatapi.com"));
 	}
+
 }

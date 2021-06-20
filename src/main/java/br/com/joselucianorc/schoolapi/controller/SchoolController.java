@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.joselucianorc.schoolapi.exception.ResourceNotFoundException;
 import br.com.joselucianorc.schoolapi.model.entity.School;
 import br.com.joselucianorc.schoolapi.service.SchoolService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,7 @@ public class SchoolController {
 	@ApiOperation(value = "get", notes="List all schools",nickname = "get")
 	@ApiResponses(value = {
 		@ApiResponse(code = 500, message = "Server error"),
-		@ApiResponse(code = 200, message = "Successful schools retrieval",
+		@ApiResponse(code = 200, message = "Schools returned successfully",
 		     response = School.class, responseContainer = "List") })
 	@GetMapping("/")
 	public List<School> get() {
@@ -50,7 +51,7 @@ public class SchoolController {
 		return service.save(school);
 	}
 
-	@ApiOperation(value = "getById", notes="Create a new school", nickname = "getById")
+	@ApiOperation(value = "getById", notes="Get a school by Id", nickname = "getById")
 	@ApiResponses(value = {
 	   @ApiResponse(code = 500, message = "Server error"),
 	   @ApiResponse(code = 200, message = "Success",
@@ -73,6 +74,9 @@ public class SchoolController {
 	@PutMapping("/{id}")
 	public ResponseEntity<School> put(@RequestBody School school, @PathVariable(value = "id") Long id) {
         Optional<School> targetSchool = Optional.of(service.getById(id));
+        if (!id.equals(school.getId())) {
+        	throw new IllegalStateException("Id param must be equals to school.id");
+        }        	
         if(targetSchool.isPresent()) {
         	service.save(school);
         	return new ResponseEntity<School>(school, HttpStatus.OK);
@@ -81,20 +85,21 @@ public class SchoolController {
         }	
 	}
 	
-	@ApiOperation(value = "delete", notes="Delete a school", nickname = "delete")
+	@ApiOperation(value = "delete", notes="Delete a school by id", nickname = "delete")
 	@ApiResponses(value = {
 	    @ApiResponse(code = 500, message = "Server error"),
 	    @ApiResponse(code = 200, message = "Success",
 	       response = School.class) })
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> delete(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<Object> delete(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Optional<School> school = Optional.of(service.getById(id));
         if(school.isPresent()){
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            
     }
 
 }
