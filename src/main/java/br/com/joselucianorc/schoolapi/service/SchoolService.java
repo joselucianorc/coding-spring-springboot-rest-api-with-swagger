@@ -2,15 +2,15 @@ package br.com.joselucianorc.schoolapi.service;
 
 import java.util.List;
 
-import br.com.joselucianorc.schoolapi.model.entity.School;
+import br.com.joselucianorc.schoolapi.model.dto.SchoolDto;
 
 public interface SchoolService {
 	
-	List<School> findAll();
+	List<SchoolDto> findAll();
 	
-	School save(School school);
+	SchoolDto save(SchoolDto school);
 	
-	School getById(Long id);
+	SchoolDto getById(Long id);
 	
 	void delete(Long id);
 

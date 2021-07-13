@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.joselucianorc.schoolapi.model.dto.SchoolDto;
 import br.com.joselucianorc.schoolapi.model.entity.School;
 import br.com.joselucianorc.schoolapi.model.repository.SchoolRepository;
 
@@ -48,7 +49,7 @@ public class SchoolServiceImplTest {
 	@Test
 	public void whenListingSchools() {
 		when(schoolRepository.findAll()).thenReturn(schools);
-		List<School> expected = schoolService.findAll();
+		List<SchoolDto> expected = schoolService.findAll();
 		assertEquals(expected, schools);
 	}
 	
@@ -58,7 +59,7 @@ public class SchoolServiceImplTest {
 		final School school = new School(1L, "Uberlandia School", "uberlandia@brstates.com");
 				
 		when(schoolRepository.getById(id)).thenReturn(school);
-		School receivedSchool = schoolService.getById(id);
+		SchoolDto receivedSchool = schoolService.getById(id);
 		assertNotNull(receivedSchool);		
 	}
 	
@@ -73,20 +74,22 @@ public class SchoolServiceImplTest {
 	@Test
 	public void whenSchoolIsUpdated() {
 		final School school = new School(1L, "Uberlandia School", "uberlandia@brstates.com");
+		final SchoolDto schoolDto = new SchoolDto(1L, "Uberlandia School", "uberlandia@brstates.com");
 		school.setId(1L);
 		when(schoolRepository.save(school)).thenReturn(school);
 		
-		final School expected = schoolService.save(school);
+		final SchoolDto expected = schoolService.save(schoolDto);
 		assertNotNull(expected);
 		verify(schoolRepository).save(Mockito.any(School.class));
 	}
 	
 	@Test
 	public void whenSchoolIsCreated() {
+		final SchoolDto schoolDto = new SchoolDto(10L, "Aracaju School", "aracaju@brstates.com.br");
 		final School school = new School(10L, "Aracaju School", "aracaju@brstates.com.br");
 		when(schoolRepository.save(school)).thenReturn(school);
 		
-		School expected = schoolService.save(school);
+		SchoolDto expected = schoolService.save(schoolDto);
 		assertNotNull(expected);
 		
 		assertEquals(10L, (Long)expected.getId());		
